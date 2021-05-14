@@ -73,3 +73,6 @@ This utility uses [lxml](https://pypi.org/project/lxml/) and it extends and abus
     </text>
 </TEI>
 ```
+
+### Rendered TEI is valid and can be uploaded to the ITSEE [Online Transcription Editor](https://itsee-wce.birmingham.ac.uk/ote/transcriptiontool)
+![itsee online transcription editor screenshot](images/example_file_in_itsee_ote.png)
