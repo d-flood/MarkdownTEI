@@ -82,3 +82,17 @@ ________________
 ______
 
 ![itsee online transcription editor screenshot](images/example_file_in_itsee_ote.png)
+
+## Built in abbreviation for documenting untranscribed commentary
+### markdown
+```markdown
+<lb/> some text followed by commentary <comm/>
+<comm lines="3"/>
+```
+### rendered TEI
+```xml
+<lb/><w>some</w><w>text</w><w>followed</w><w>by</w><w>commentary</w><note type="commentary">untranscribed commentary text</note>
+<lb/><note type="commentary">One line of untranscribed commentary text</note>
+<lb/><note type="commentary">One line of untranscribed commentary text</note>
+<lb/><note type="commentary">One line of untranscribed commentary text</note>
+```
