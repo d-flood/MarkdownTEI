@@ -1,0 +1,6 @@
+# ignore everything for now
+*
+
+# except
+!.gitignore
+!README.md
