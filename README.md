@@ -1,11 +1,15 @@
-# Markdown for TEI Transcriptions
+# Markdown for TEI Transcriptions version 0.1
 
-Project Goals
+Source code coming soon...
+
+### Project Goals
 1. Define a modified subset of markdown syntax
 2. Converts the markdown transcription into a TEI XML encoded document that is compatible with the ITSEE/INTF [Online Transcription Editor](https://itsee-wce.birmingham.ac.uk/ote/transcriptiontool).
 3. Produce JSON transcription files for use with the ITSEE [Collation Editor](https://github.com/itsee-birmingham/standalone_collation_editor)
 
-This utility uses [lxml](https://pypi.org/project/lxml/) and it extends and abuses [Python-Markdown](https://pypi.org/project/Markdown/)
+### Requirements
+- [lxml](https://pypi.org/project/lxml/) 
+- [Python-Markdown](https://pypi.org/project/Markdown/)
 
 ## Repurposed and Modified Syntax | Example
 ### markdown text
@@ -74,5 +78,7 @@ This utility uses [lxml](https://pypi.org/project/lxml/) and it extends and abus
 </TEI>
 ```
 ________________
-### Rendered TEI is valid and can be uploaded to the ITSEE [Online Transcription Editor](https://itsee-wce.birmingham.ac.uk/ote/transcriptiontool)
+## Rendered TEI is valid and can be uploaded to the ITSEE [Online Transcription Editor](https://itsee-wce.birmingham.ac.uk/ote/transcriptiontool)
+______
+
 ![itsee online transcription editor screenshot](images/example_file_in_itsee_ote.png)
