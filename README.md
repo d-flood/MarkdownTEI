@@ -59,7 +59,7 @@ This utility uses [lxml](https://pypi.org/project/lxml/) and it extends and abus
                         <lb/><w>unclear</w><w><unclear>text</unclear></w><w>in</w><w>back<unclear>ticks</unclear></w>
                         <lb/><seg type="margin" subtype="lineleft">marginalia in double-asterisks</seg>
                         <lb/><w>a</w><w>word</w><w>bro<lb/>ken</w><w>by</w><w>a</w>break
-                        <lb/>{unencoded notes in braces}
+                        <lb/>
                         <lb/><note type="local">encoded editer's note in single asterisks</note>
                         <lb/><app>
                             <rdg type="orig" hand="firsthand"><w>correcdet</w><w>txet</w></rdg>
