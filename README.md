@@ -62,8 +62,8 @@ This utility uses [lxml](https://pypi.org/project/lxml/) and it extends and abus
                         <lb/>
                         <lb/><note type="local">encoded editer's note in single asterisks</note>
                         <lb/><app>
-                            <rdg type="orig" hand="firsthand"><w>correcdet</w><w>txet</w></rdg>
-                            <rdg type="corr" hand="corrector"><w>corrected</w><w>text</w></rdg>
+                               <rdg type="orig" hand="firsthand"><w>correcdet</w><w>txet</w></rdg>
+                               <rdg type="corr" hand="corrector"><w>corrected</w><w>text</w></rdg>
                             </app>
                         <lb/><w>add</w><w>attributes</w><w>to</w><w>an</w><w><unclear reason="damage to page">element</unclear></w>
                     </ab>
@@ -73,6 +73,6 @@ This utility uses [lxml](https://pypi.org/project/lxml/) and it extends and abus
     </text>
 </TEI>
 ```
-
+________________
 ### Rendered TEI is valid and can be uploaded to the ITSEE [Online Transcription Editor](https://itsee-wce.birmingham.ac.uk/ote/transcriptiontool)
 ![itsee online transcription editor screenshot](images/example_file_in_itsee_ote.png)
