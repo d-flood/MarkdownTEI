@@ -23,7 +23,7 @@ This utility uses [lxml](https://pypi.org/project/lxml/) and it extends and abus
 <lb/>unclear `text` in back`ticks`
 <lb/>**marginalia in double-asterisks**{subtype='lineleft'}
 <lb/>a word bro-
-<lb/>/ken by a break
+<lb/>ken by a break
 <lb/>{unencoded notes in braces}
 <lb/>*encoded editer's note in single asterisks*
 <lb/> ++ correcdet txet | corrected text ++
@@ -58,7 +58,7 @@ This utility uses [lxml](https://pypi.org/project/lxml/) and it extends and abus
                         <lb/><w><supplied>supp</supplied>lied</w><w><supplied>text</supplied></w><w>in</w><w>brackets</w>
                         <lb/><w>unclear</w><w><unclear>text</unclear></w><w>in</w><w>back<unclear>ticks</unclear></w>
                         <lb/><seg type="margin" subtype="lineleft">marginalia in double-asterisks</seg>
-                        <lb/><w><w>a</w></w><w>word</w><w>bro</w><lb/><w>/ken</w><w>by</w><w><w>a</w></w>bre<w><w>a</w></w>k
+                        <lb/><w>a</w><w>word</w><w>bro<lb/>ken</w><w>by</w><w>a</w>break
                         <lb/>{unencoded notes in braces}
                         <lb/><note type="local">encoded editer's note in single asterisks</note>
                         <lb/><app>
