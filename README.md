@@ -16,7 +16,7 @@ This utility uses [lxml](https://pypi.org/project/lxml/) and it extends and abus
 ................................... <!-- marks end of header -->
 #### Romans <!-- Full or SBL abbreviated book title is converted to IGNTP/INTF format  -->
 ##### 11   <!-- numerical chapter is converted to IGNTP/INTF format  -->
-<pb n="323v"/> <!-- regular XML tags work and are useful --> 
+<pb n="323v"/> <!-- regular XML tags work and are useful; this one states the folio and side --> 
 <lb/> words are tokenized
 <lb/><v n="5">shortcut tag for verse unit
 <lb/>[supp]lied [text] in brackets
