@@ -4,3 +4,5 @@
 # except
 !.gitignore
 !README.md
+!images/
+!example_file_in_itsee_ote.png
