@@ -5,17 +5,17 @@ Project Goals
 2. Converts the markdown transcription into a TEI XML encoded document that is compatible with the ITSEE/INTF [Online Transcription Editor](https://itsee-wce.birmingham.ac.uk/ote/transcriptiontool).
 3. Produce JSON transcription files for use with the ITSEE [Collation Editor](https://github.com/itsee-birmingham/standalone_collation_editor)
 
-This tool utility uses [lxml](https://pypi.org/project/lxml/) and it extends and abuses [Python-Markdown](https://pypi.org/project/Markdown/)
+This utility uses [lxml](https://pypi.org/project/lxml/) and it extends and abuses [Python-Markdown](https://pypi.org/project/Markdown/)
 
 ## Repurposed and Modified Syntax | Example
-### 
+### markdown text
 ```markdown
 # A Transcription of ZZZZ {n='ZZZZ'}
 ## Talitha Mackenzie
 ### 2021-05-12
 ................................... <!-- marks end of header -->
-#### Romans
-##### 11
+#### Romans <!-- Full or SBL abbreviated book title is converted to IGNTP/INTF format  -->
+##### 11   <!-- numerical chapter is converted to IGNTP/INTF format  -->
 <pb n="323v"/> <!-- regular XML tags work and are useful --> 
 <lb/> words are tokenized
 <lb/><v n="5">shortcut tag for verse unit
