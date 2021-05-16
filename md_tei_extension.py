@@ -20,33 +20,61 @@ def preprocess_md(md: str):
 
 ###########################################################
 # post process markup before final xml processing.
-# This section must result in valid xml to be parsed with lxml--it is
-# not necessarily valid xml before the below processing
+# This section must result in valid xml to be parsed with lxml
 
-# def add_text_body_opening_tags(markup: str):
+def add_text_body_opening_tags(markup: str):
+    '''User defines in markdown where the TEI header information ends
+    and the transcription begins by placing three or more fullstops
+    (e.g. '...') on their own line. Only replace first occurance so that
+    the use of fullstops is available to user for other things (e.g. lacunae).'''
+    return re.sub(r'\.\.\.+', '<text xml:lang="grc"><body>', markup, count=1)
 
-def postprocess_markup(markup: str):
-    markup = re.sub(r'\.\.\.+', '<text xml:lang="grc"><body>', markup)
-    
-    # wrap transcription in div book tags
+def h4_to_book_div(markup: str):
+    '''Repurpose the h4 tags renderd from the '#### <book>' markup syntax
+    for a div tag that wraps all transcription pertaining to the book
+    specified in the h4 text. User most close this tag by adding '####'
+    without any text at the end of the book transcription.'''
     book_match = re.search(r'<h4>[^<>]+</h4>', markup).group(0)
     book = book_match.replace('<h4>', '')
     book = book.replace('</h4>', '')
-    book = nt_to_igntp[book]
+    try:
+        book = nt_to_igntp[book]
+    except KeyError:
+        pass
     book_elem = f'<div type="book" n="{book}">\n'
     markup = markup.replace(book_match, book_elem)
+    return markup, book
 
-    # wrap chapter section in div tags
+def h5_to_chapter_div(markup: str, book):
+    '''Repurpose the h5 tags renderd from the '##### <chapter number>' markup syntax
+    for a div tag that wraps all transcription pertaining to the chapter
+    specified in the h5 text. User most close this tag by adding '#####'
+    without any text at the end of the chapter transcription.'''
     chapter_match = re.search(r'<h5>[^<>]+</h5>', markup).group(0)
     chapter = chapter_match.replace('<h5>', '')
     chapter = chapter.replace('</h5>', '')
     chapter_elem = f'<div type="chapter" n="{book}K{chapter}">'
     markup = markup.replace(chapter_match, chapter_elem)
+    return markup
 
+def bulk_replace(markup: str):
+    '''Convert Markdown tag names to TEI tags
+    (and other things).'''
     for x in html_to_tei:
         markup = markup.replace(x[0], x[1])
-    markup = f'''<!DOCTYPE TEI><?xml-stylesheet type="text/xsl" href="IGNTP-Rom.xsl"?>
-             <TEI xmlns="http://www.tei-c.org/ns/1.0">{markup}</body></text></TEI>'''
+    return markup
+
+def add_tei_boilerplate_and_ending_tags(markup: str):
+    return f'''<!DOCTYPE TEI><?xml-stylesheet type="text/xsl" href="tei_transcription.xsl"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0">{markup}</body></text></TEI>'''
+
+def postprocess_markup(markup: str):
+    markup = add_text_body_opening_tags(markup)
+    markup, book = h4_to_book_div(markup)
+    markup = h5_to_chapter_div(markup, book)
+    markup = bulk_replace(markup)
+    markup = bulk_replace(markup)
+    markup = add_tei_boilerplate_and_ending_tags(markup)
 
     return markup
 
