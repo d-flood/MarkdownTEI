@@ -18,11 +18,18 @@ def preprocess_md(md: str):
     md = md.replace(']', '~~')
     return md
 
+###########################################################
+# post process markup before final xml processing.
+# This section must result in valid xml to be parsed with lxml--it is
+# not necessarily valid xml before the below processing
+
+# def add_text_body_opening_tags(markup: str):
+
 def postprocess_markup(markup: str):
     markup = re.sub(r'\.\.\.+', '<text xml:lang="grc"><body>', markup)
-
+    
     # wrap transcription in div book tags
-    book_match = re.search(r'<h4>[^<h4>]+</h4>', markup).group(0)
+    book_match = re.search(r'<h4>[^<>]+</h4>', markup).group(0)
     book = book_match.replace('<h4>', '')
     book = book.replace('</h4>', '')
     book = nt_to_igntp[book]
@@ -30,7 +37,7 @@ def postprocess_markup(markup: str):
     markup = markup.replace(book_match, book_elem)
 
     # wrap chapter section in div tags
-    chapter_match = re.search(r'<h5>[^<h5>]+</h5>', markup).group(0)
+    chapter_match = re.search(r'<h5>[^<>]+</h5>', markup).group(0)
     chapter = chapter_match.replace('<h5>', '')
     chapter = chapter.replace('</h5>', '')
     chapter_elem = f'<div type="chapter" n="{book}K{chapter}">'
@@ -42,6 +49,10 @@ def postprocess_markup(markup: str):
              <TEI xmlns="http://www.tei-c.org/ns/1.0">{markup}</body></text></TEI>'''
 
     return markup
+
+###########################################################
+###########################################################
+
 
 def postprocess_xml(root: _Element):
     tei_ns = 'http://www.tei-c.org/ns/1.0'
