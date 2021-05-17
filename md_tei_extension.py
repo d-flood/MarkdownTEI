@@ -125,53 +125,75 @@ def postprocess_xml(root: _Element):
 ###########################################################
 
 class TokenizeText(Preprocessor):
-    """ wrap individual words in <w> tags """
+    """ wrap individual transcribed words in <w> tags """
     def rando_str(self):
         chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
         random_list = [random.choice(chars) for _ in range(5)]
-        return ''.join(random_list)
+        rando =  ''.join(random_list)
+        return f'$$${rando}'
 
-    def tokenize_text(self, text: str):
-        breaks_in_word = re.findall(r'<lb[^<>]*/>', text)
-        user_markups = re.findall(r'{[^{}]+}', text)
-        markups = re.findall(r'<[^<>]+>', text)
-        notes = re.findall(r'\*[^*]+\*', text)
-
-        replacements = []
-        randos = ['|']
-        for m in user_markups:
-            rando = self.rando_str()
-            text = text.replace(m, f'{rando} ')
-            replacements.append((m, rando))
-            randos.append(rando)
-
+    def replace_words_with_mid_break(self, text, replacements, randos):
+        breaks_in_word = re.findall(r'<lb[^<>]*>', text)
         for brk in breaks_in_word:
             rando = self.rando_str()
             text = text.replace(brk, f'{rando}')
             replacements.append((brk, rando))
             randos.append(rando)
-            
-        for a in markups:
-            rando = self.rando_str()
-            text = text.replace(a, f' {rando} ')
-            replacements.append((a, f'{rando}'))
-            randos.append(rando)
+        return text, replacements, randos
 
-        for z in notes:
+    def replace_user_markups(self, text, replacements, randos):
+        user_markups = re.findall(r'{[^{}]+}', text)
+        for m in user_markups:
             rando = self.rando_str()
-            text = text.replace(z, f'{rando}')
-            replacements.append((z, f'{rando}'))
+            text = text.replace(m, f'{rando} ')
+            replacements.append((m, rando))
             randos.append(rando)
+        return text, replacements, randos
 
+    def replace_markups(self, text, replacements, randos):
+        markups = re.findall(r'<[^<>]+>', text)
+        for m in markups:
+            rando = self.rando_str()
+            text = text.replace(m, f' {rando} ')
+            replacements.append((m, f'{rando}'))
+            randos.append(rando)
+        return text, replacements, randos
+
+    def replace_notes(self, text, replacements, randos):
+        notes = re.findall(r'\*[^*]+\*', text)
+        for n in notes:
+            rando = self.rando_str()
+            text = text.replace(n, f'{rando}')
+            replacements.append((n, f'{rando}'))
+            randos.append(rando)
+        return text, replacements, randos
+
+    def build_new_text(self, text, randos):
         new_text = []
         for word in text.split():
-            if word not in randos and not word.startswith('*') and not word.startswith('+'):
-                # text = text.replace(f'{word}', f' <w>{word.strip()}</w> ')
+            if word != '|' and not word.startswith('*') and not word.startswith('+') and not word.startswith('$$$'):
                 word = word.replace(word, f'<w>{word}</w>')
             new_text.append(word)
         text = ''.join(new_text)
+        return text
+
+    def replace_randos(self, text, replacements):
         for r in replacements:
             text = text.replace(r[1], r[0])
+        return text
+
+    def tokenize_text(self, text: str):
+        '''tokenize transcription words but ignore other 
+        words (e.g. notes) and markup that may contain 
+        spaces but should not be tokenized'''
+        replacements = []
+        randos = []
+        text, replacements, randos = self.replace_words_with_mid_break(text, replacements, randos)
+        text, replacements, randos = self.replace_user_markups(text, replacements, randos)
+        text, replacements, randos = self.replace_markups(text, replacements, randos)
+        text, replacements, randos = self.replace_notes(text, replacements, randos)   
+        text = self.build_new_text(text, randos)
+        text = self.replace_randos(text, replacements)
         return text
 
     def run(self, lines: list):
@@ -197,12 +219,14 @@ class RestructureTree(Treeprocessor):
     def remove_elements(self, root, elements_to_remove: tuple):
         for elem in elements_to_remove:
             root.remove(elem)
+
     def get_header_info(self, root):
         return (
             root.find('h1'),
             root.find('h2'),
             root.find('h3'),
         )
+        
     def build_tei_header(self, root, tei_header, file_desc, title_statement, resp_statement, name, resp):
         title, person, date = self.get_header_info(root)
         root.insert(0, tei_header)
@@ -230,14 +254,6 @@ class RestructureTree(Treeprocessor):
                               resp_statement, name, resp)         
         self.add_page_break_type(root)
 
-
-# class TEIPost(Postprocessor):
-#     """ Change tags to be TEI compliant """
-#     def run(self, text):
-#         text = re.sub(r'\.\.\.+', '<text xml:lang="grc"><body>', text)
-#         for x in html_to_tei:
-#             text = text.replace(x[0], x[1])
-#         return f'<!DOCTYPE TEI><?xml-stylesheet type="text/xsl" href="IGNTP-Rom.xsl"?><TEI xmlns="http://www.tei-c.org/ns/1.0">{text}</body></text></TEI>'
 
 class TEI(Extension):
     def extendMarkdown(self, md: Markdown, key="TEI", index=200):
