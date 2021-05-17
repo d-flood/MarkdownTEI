@@ -7,7 +7,6 @@ from typing import List
 
 from markdown.core import Markdown
 from markdown.extensions import Extension
-# from markdown.postprocessors import Postprocessor
 from markdown.preprocessors import Preprocessor
 from markdown.treeprocessors import Treeprocessor
 
@@ -65,8 +64,7 @@ def bulk_replace(markup: str):
     return markup
 
 def add_tei_boilerplate_and_ending_tags(markup: str):
-    return f'''<!DOCTYPE TEI><?xml-stylesheet type="text/xsl" href="tei_transcription.xsl"?>
-<TEI xmlns="http://www.tei-c.org/ns/1.0">{markup}</body></text></TEI>'''
+    return f'''<!DOCTYPE TEI><TEI xmlns="http://www.tei-c.org/ns/1.0">{markup}</body></text></TEI>'''
 
 def postprocess_markup(markup: str):
     markup = add_text_body_opening_tags(markup)
@@ -116,9 +114,18 @@ def fill_out_verse_unit_attributes(root: _Element):
         v.attrib['n'] = f'{v.getparent().get("n")}V{v.get("n")}'
     return root
 
+def add_page_break_type(root: _Element):
+    '''adds type="folio" to the page break element
+    for a very minor convenvience'''
+    tei_ns = 'http://www.tei-c.org/ns/1.0'
+    for pb in root.xpath('//tei:pb', namespaces={'tei': tei_ns}):
+        pb.attrib['type'] = 'folio'
+    return root
+
 def postprocess_xml(root: _Element):
     root = fill_out_untranscribed_commentary_markup(root)
     root = fill_out_verse_unit_attributes(root)
+    root = add_page_break_type(root)
     return root
 
 ###########################################################
@@ -226,9 +233,12 @@ class RestructureTree(Treeprocessor):
             root.find('h2'),
             root.find('h3'),
         )
-        
-    def build_tei_header(self, root, tei_header, file_desc, title_statement, resp_statement, name, resp):
+
+    def build_tei_header(self, root):
+        (tei_header, file_desc, title_statement, resp_statement, 
+         name, resp) = self.create_elements()
         title, person, date = self.get_header_info(root)
+        title.tag = 'title'
         root.insert(0, tei_header)
         tei_header.append(file_desc)
         file_desc.append(title_statement)
@@ -240,37 +250,25 @@ class RestructureTree(Treeprocessor):
         name.text = person.text
         name.attrib = {'type': 'person'}
         resp.text = 'Transcribed by'
-        resp.attrib = {'date': date.text}
+        resp.attrib = {'when-iso': date.text}
         self.remove_elements(root, (title, date, person))
 
-    def add_page_break_type(self, root):
-        for pb in root.findall('pb'):
-            pb.attrib = {'type': 'folio'}
-
     def run(self, root: et.Element):
-        (tei_header, file_desc, title_statement, resp_statement, 
-         name, resp) = self.create_elements()
-        self.build_tei_header(root, tei_header, file_desc, title_statement, 
-                              resp_statement, name, resp)         
-        self.add_page_break_type(root)
+        self.build_tei_header(root)         
 
 
 class TEI(Extension):
     def extendMarkdown(self, md: Markdown, key="TEI", index=200):
-        # md.postprocessors.register(TEIPost(), key, index)
         md.treeprocessors.register(RestructureTree(md), 'RestructureTree', 200)
         md.preprocessors.register(TokenizeText(md), 'tokenize', 200)
 
 
 html_to_tei = (
-    ('<h1', '<title'),
-    ('</h1>', '</title>'),
     ('<h2', '<respStmt'),
     ('</h2>', '</respStmt>'),
     ('<code', '<unclear'),
     ('</code>', '</unclear>'),
     ('·', '<pc>·</pc>'),
-    ('date', 'when-iso'),
     ('<v', '<ab'),
     ('</v>', '</ab>'),
     ('<p>', ''),
