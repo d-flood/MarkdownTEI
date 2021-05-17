@@ -7,3 +7,7 @@
 !images/
 !example_file_in_itsee_ote.png
 !md_tei_extension.py
+!examples/
+!test_markdown_to_tei.py
+!markdown_to_tei.py
+!requirements.txt
