@@ -80,15 +80,13 @@ def postprocess_markup(markup: str):
 
 ###########################################################
 ###########################################################
+# Post process by parsing xml
 
-
-def postprocess_xml(root: _Element):
+def fill_out_untranscribed_commentary_markup(root: _Element):
+    '''convert abbreviated "<comm/>" and "<comm lines=4> tags into IGNTP equivalent markup'''
     tei_ns = 'http://www.tei-c.org/ns/1.0'
     xml_ns = 'http://www.w3.org/XML/1998/namespace'
     comms = root.xpath(f'//tei:comm', namespaces={'tei': tei_ns}) # type: List[_Element]
-    verse_units = root.xpath(f'//tei:ab', namespaces={'tei': tei_ns}) # type: List[_Element]
-
-    # convert abbreviated commentary tags into full TEI compatible elements
     for comm in comms:
         if comm.get('lines'):
             index = comm.getparent().index(comm)
@@ -108,12 +106,23 @@ def postprocess_xml(root: _Element):
             comm.tag = 'note'
             comm.attrib['type'] = 'commentary'
             comm.text = 'untranscribed commentary text'
-    
-    # convert abbreviated verse units attributes n="4" to IGNTP ref n="B06K13V4"
+    return root
+
+def fill_out_verse_unit_attributes(root: _Element):
+    '''Convert verse number e.g. n="6" to full IGNTP format e.g. n="B06K11V6"'''
+    tei_ns = 'http://www.tei-c.org/ns/1.0'
+    verse_units = root.xpath(f'//tei:ab', namespaces={'tei': tei_ns}) # type: List[_Element]
     for v in verse_units: #type: _Element
         v.attrib['n'] = f'{v.getparent().get("n")}V{v.get("n")}'
-
     return root
+
+def postprocess_xml(root: _Element):
+    root = fill_out_untranscribed_commentary_markup(root)
+    root = fill_out_verse_unit_attributes(root)
+    return root
+
+###########################################################
+###########################################################
 
 class TokenizeText(Preprocessor):
     """ wrap individual words in <w> tags """
