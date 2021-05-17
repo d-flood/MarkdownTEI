@@ -12,6 +12,8 @@ from markdown.treeprocessors import Treeprocessor
 
 
 def preprocess_md(md: str):
+    for x in punctuation:
+        md = md.replace(x, f'<pc>{x}</pc>')
     md = md.replace('-\n', '')
     md = md.replace('[', '~~')
     md = md.replace(']', '~~')
@@ -49,11 +51,12 @@ def h5_to_chapter_div(markup: str, book):
     for a div tag that wraps all transcription pertaining to the chapter
     specified in the h5 text. User most close this tag by adding '#####'
     without any text at the end of the chapter transcription.'''
-    chapter_match = re.search(r'<h5>[^<>]+</h5>', markup).group(0)
-    chapter = chapter_match.replace('<h5>', '')
-    chapter = chapter.replace('</h5>', '')
-    chapter_elem = f'<div type="chapter" n="{book}K{chapter}">'
-    markup = markup.replace(chapter_match, chapter_elem)
+    chapters = re.findall(r'<h5>[^<>]+</h5>', markup)
+    for chapter_match in chapters:
+        chapter = chapter_match.replace('<h5>', '')
+        chapter = chapter.replace('</h5>', '')
+        chapter_elem = f'<div type="chapter" n="{book}K{chapter}">'
+        markup = markup.replace(chapter_match, chapter_elem)
     return markup
 
 def bulk_replace(markup: str):
@@ -238,7 +241,6 @@ class RestructureTree(Treeprocessor):
         (tei_header, file_desc, title_statement, resp_statement, 
          name, resp) = self.create_elements()
         title, person, date = self.get_header_info(root)
-        title.tag = 'title'
         root.insert(0, tei_header)
         tei_header.append(file_desc)
         file_desc.append(title_statement)
@@ -263,12 +265,15 @@ class TEI(Extension):
         md.preprocessors.register(TokenizeText(md), 'tokenize', 200)
 
 
+punctuation = (' . ', ' , ', ' · ', ' : ', ' + ', ' ~ ')
+
 html_to_tei = (
+    ('<h1', '<title'),
+    ('</h1>', '</title>'),
     ('<h2', '<respStmt'),
     ('</h2>', '</respStmt>'),
     ('<code', '<unclear'),
     ('</code>', '</unclear>'),
-    ('·', '<pc>·</pc>'),
     ('<v', '<ab'),
     ('</v>', '</ab>'),
     ('<p>', ''),
@@ -287,9 +292,9 @@ html_to_tei = (
     ('<ins>', '<app><rdg type="orig" hand="firsthand">'),
     ('|', '</rdg><rdg type="corr" hand="corrector">'),
     ('</ins>', '</rdg></app>'),
+    ('\n', ''),
 )
 
-# TODO: complete for at least the 27 NT books
 nt_to_igntp = {
     'Matt': 'B01',
     'Matthew': 'B01',
