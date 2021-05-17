@@ -1,0 +1,38 @@
+<!DOCTYPE TEI>
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title type="document">A Simple Transcription Example</title>
+                <respStmt>
+                    <resp when-iso="2021-05-12">Transcribed by</resp>
+                    <name type="person">FirstName LastName</name>
+                </respStmt>
+            </titleStmt>
+        </fileDesc>
+    </teiHeader>
+    <text xml:lang="grc">
+        <body>
+            <div type="book" n="B06">
+                <div type="chapter" n="B06K11">
+                    <pb n="323v" type="folio"/>
+                    <lb/><w>words</w><w>are</w><w>tokenized</w>
+                    <lb/><ab n="B06K11V5"><w>shortcut</w><w>tag</w><w>for</w><w>verse</w><w>unit</w>
+                    <lb/><w><supplied>supp</supplied>lied</w><w><supplied>text</supplied></w><w>in</w><w>brackets</w>
+                    <lb/><w>unclear</w><w><unclear>text</unclear></w><w>in</w><w>back<unclear>ticks</unclear></w>
+                    <lb/><w>some</w><w>text</w><w>followed</w><w>by</w><w>commentary</w><note type="commentary">untranscribed commentary text</note>
+                    <lb/><note type="commentary">One line of untranscribed commentary text</note>
+                    <lb/><note type="commentary">One line of untranscribed commentary text</note>
+                    <lb/><note type="commentary">One line of untranscribed commentary text</note>
+                    <lb/><seg type="margin">marginalia in double-asterisks</seg>
+                    <lb/><w>a</w><w>word</w><w>bro
+                    <lb n="8"/>ken</w><w>over</w><w>two</w><w>lines</w>
+                    <lb/>{unencoded notes in braces}
+                    <lb/><note type="local">encoded editer's note in single asterisks</note>
+                    <lb/><app><rdg type="orig" hand="firsthand"><w>corrcdet</w><w>tetx</w></rdg><rdg type="corr" hand="corrector"><w>corrected</w><w>text</w></rdg></app>
+                    <lb/><w>add</w><w>attributes</w><w>to</w><w>an</w><w><unclear reason="damage to page">element</unclear></w></ab>
+                </div>
+            </div>
+        </body>
+    </text>
+</TEI>

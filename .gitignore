@@ -8,6 +8,10 @@
 !example_file_in_itsee_ote.png
 !md_tei_extension.py
 !examples/
+!example.md
+!example.xml
+!simple_example.md
+!simple_example.xml
 !test_markdown_to_tei.py
 !markdown_to_tei.py
 !requirements.txt
