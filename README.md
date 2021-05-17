@@ -14,11 +14,12 @@
 
 ### Using this Tool
 - Clone or download this repository and navigate to the root folder in a console window.
-- to convert the simple example, execute execute `python markdown_to_tei.py examples/simple_example.md`
+- to convert the simple example, execute execute `python -m markdown_to_tei.py examples/simple_example.md`
 This will use the default settings: the output file has the same name as the input file but the extension is changed to `.xml` and it is pretty printed.
-- Use the -o flag and add an output location, e.g. `python markdown_to_tei.py examples/simple_example.md -o my_file.xml`
+- Use the -o flag and add an output location, e.g. `python -m markdown_to_tei.py examples/simple_example.md -o my_file.xml`
 - Use the -l flag to signal that the output file should be formatted according to the transcription lines, one transcription line per line in the file.
 - Use the -p flag to make remove unimportant whitespace (ideal for storage, not for reading).
+- To run the tests, execute `python -m pytest` from the root folder.
 
 ## Repurposed and Modified Syntax | Simple Example
 ### markdown text
